@@ -16,14 +16,14 @@ function requireEnv(key: string): string {
 }
 
 export function signAccessToken(payload: JwtPayload): string {
-  return jwt.sign(payload, requireEnv('JWT_SECRET'), {
-    expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as string,
+  return jwt.sign(payload as any, requireEnv('JWT_SECRET'), {
+    expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as any,
   });
 }
 
 export function signRefreshToken(userId: string): string {
   return jwt.sign({ sub: userId }, requireEnv('JWT_REFRESH_SECRET'), {
-    expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as string,
+    expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as any,
   });
 }
 
