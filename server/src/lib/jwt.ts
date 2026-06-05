@@ -9,7 +9,7 @@ export interface JwtPayload {
   departamentoId?: string | null;
 }
 
-function requireEnv(key: string): string {
+export function requireEnv(key: string): string {
   const val = process.env[key];
   if (!val) throw new Error(`Variable de entorno requerida: ${key}`);
   return val;
@@ -17,6 +17,7 @@ function requireEnv(key: string): string {
 
 export function signAccessToken(payload: JwtPayload): string {
   return jwt.sign(payload as any, requireEnv('JWT_SECRET'), {
+  return jwt.sign(payload, requireEnv('JWT_SECRET'), {
     expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as any,
   });
 }
