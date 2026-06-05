@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "NexusRH — API REST de gestión de nómina y RRHH",
   "scripts": {
+    "test": "jest",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
@@ -30,11 +31,14 @@
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
+    "@types/express": "^4.17.25",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.9.0",
+    "jest": "^30.4.2",
     "prisma": "^5.22.0",
+    "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3"
