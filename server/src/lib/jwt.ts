@@ -9,7 +9,7 @@ export interface JwtPayload {
   departamentoId?: string | null;
 }
 
-function requireEnv(key: string): string {
+export function requireEnv(key: string): string {
   const val = process.env[key];
   if (!val) throw new Error(`Variable de entorno requerida: ${key}`);
   return val;
@@ -17,13 +17,13 @@ function requireEnv(key: string): string {
 
 export function signAccessToken(payload: JwtPayload): string {
   return jwt.sign(payload, requireEnv('JWT_SECRET'), {
-    expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as string,
+    expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as any,
   });
 }
 
 export function signRefreshToken(userId: string): string {
   return jwt.sign({ sub: userId }, requireEnv('JWT_REFRESH_SECRET'), {
-    expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as string,
+    expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as any,
   });
 }
 
