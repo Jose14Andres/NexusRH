@@ -1,0 +1,38 @@
+# Dependencias
+node_modules/
+
+# Build
+server/dist/
+client/dist/
+
+# Base de datos local
+server/prisma/dev.db
+server/prisma/dev.db-journal
+server/prisma/*.db
+server/prisma/*.db-wal
+server/prisma/*.db-shm
+
+# Variables de entorno (NUNCA commitear)
+server/.env
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# TypeScript cache
+*.tsbuildinfo

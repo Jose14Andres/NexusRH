@@ -1,0 +1,227 @@
+// Para cambiar a PostgreSQL en producción:
+//   1. Cambia provider a "postgresql"
+//   2. Reemplaza los campos Float por Decimal @db.Decimal(10,2)
+//   3. Actualiza DATABASE_URL en .env
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────
+// ORGANIZACIÓN Y ESTRUCTURA
+// ─────────────────────────────────────────────────────────
+
+model Organizacion {
+  id            String         @id @default(cuid())
+  nombre        String
+  tipo          String         @default("PRIVADA") // PUBLICA | PRIVADA
+  ruc           String         @unique
+  direccion     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  departamentos Departamento[]
+}
+
+model Departamento {
+  id             String       @id @default(cuid())
+  nombre         String
+  organizacionId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizacion   Organizacion @relation(fields: [organizacionId], references: [id])
+  cargos         Cargo[]
+  empleados      Empleado[]
+
+  @@unique([nombre, organizacionId])
+}
+
+model Cargo {
+  id             String       @id @default(cuid())
+  nombre         String
+  descripcion    String?
+  departamentoId String
+  sueldoBase     Float        // PostgreSQL: Decimal @db.Decimal(10,2)
+  jornadaHoras   Int          @default(8)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  departamento   Departamento @relation(fields: [departamentoId], references: [id])
+  empleados      Empleado[]
+}
+
+// ─────────────────────────────────────────────────────────
+// EMPLEADOS
+// ─────────────────────────────────────────────────────────
+
+model Empleado {
+  id             String          @id @default(cuid())
+  cedula         String          @unique
+  nombres        String
+  apellidos      String
+  email          String          @unique
+  telefono       String?
+  fechaIngreso   DateTime
+  fechaSalida    DateTime?
+  estado         String          @default("ACTIVO") // ACTIVO | INACTIVO | LICENCIA
+  cargoId        String
+  departamentoId String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  cargo          Cargo           @relation(fields: [cargoId], references: [id])
+  departamento   Departamento    @relation(fields: [departamentoId], references: [id])
+  afiliacion     Afiliacion?
+  nominas        Nomina[]
+  registrosHoras RegistroHoras[]
+  usuario        Usuario?
+}
+
+model Afiliacion {
+  id               String   @id @default(cuid())
+  empleadoId       String   @unique
+  asegurado        Boolean  @default(false)
+  numeroAfiliacion String?
+  tipoSeguro       String   @default("NINGUNO") // IESS | PRIVADO | NINGUNO
+  fechaAfiliacion  DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  empleado         Empleado @relation(fields: [empleadoId], references: [id])
+}
+
+// ─────────────────────────────────────────────────────────
+// HORAS TRABAJADAS
+// ─────────────────────────────────────────────────────────
+
+model RegistroHoras {
+  id            String   @id @default(cuid())
+  empleadoId    String
+  fecha         DateTime
+  horasNormales Float    @default(0)
+  horasExtras   Float    @default(0)
+  observacion   String?
+  estado        String   @default("PENDIENTE") // PENDIENTE | APROBADO | RECHAZADO
+  aprobadoPor   String?  // usuarioId
+  createdAt     DateTime @default(now())
+  empleado      Empleado @relation(fields: [empleadoId], references: [id])
+
+  @@unique([empleadoId, fecha])
+}
+
+// ─────────────────────────────────────────────────────────
+// NÓMINA
+// ─────────────────────────────────────────────────────────
+
+model ConfiguracionNomina {
+  id                String   @id @default(cuid())
+  aportePersonalPct Float    @default(0.0945)  // 9.45% IESS Ecuador
+  aportePatronalPct Float    @default(0.1215)  // 12.15% IESS Ecuador
+  valorHoraExtraPct Float    @default(0.25)    // 25% recargo hora extra
+  fondosReservaPct  Float    @default(0.0833)  // 8.33% (1/12 sueldo)
+  decimoTerceroPct  Float    @default(0.0833)  // 8.33% décimo tercero
+  decimoCuartoPct   Float    @default(0.0833)  // Proporcional SBU
+  vigente           Boolean  @default(true)
+  createdAt         DateTime @default(now())
+}
+
+model Nomina {
+  id               String   @id @default(cuid())
+  empleadoId       String
+  mes              Int      // 1-12
+  anio             Int
+  sueldoBruto      Float
+  aportePersonal   Float
+  aportePatronal   Float
+  fondosReserva    Float    @default(0)
+  decimoTercero    Float    @default(0)
+  decimoCuarto     Float    @default(0)
+  descuentos       Float    @default(0)
+  bonos            Float    @default(0)
+  horasExtrasValor Float    @default(0)
+  horasExtrasQty   Float    @default(0)
+  sueldoNeto       Float
+  fechaPago        DateTime?
+  estado           String   @default("PENDIENTE") // PENDIENTE | CALCULADO | APROBADO | PAGADO
+  observaciones    String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  empleado         Empleado @relation(fields: [empleadoId], references: [id])
+
+  @@unique([empleadoId, mes, anio])
+}
+
+// ─────────────────────────────────────────────────────────
+// AUTH / RBAC
+// ─────────────────────────────────────────────────────────
+
+model Usuario {
+  id            String         @id @default(cuid())
+  username      String         @unique
+  passwordHash  String
+  empleadoId    String?        @unique
+  activo        Boolean        @default(true)
+  refreshToken  String?        // hash bcrypt del refresh token
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  empleado      Empleado?      @relation(fields: [empleadoId], references: [id])
+  roles         UsuarioRol[]
+  logsAuditoria LogAuditoria[]
+}
+
+model RolSistema {
+  id          String       @id @default(cuid())
+  nombre      String       @unique // ADMIN | RRHH | CONTABILIDAD | SUPERVISOR | EMPLEADO
+  descripcion String?
+  createdAt   DateTime     @default(now())
+  usuarios    UsuarioRol[]
+  permisos    RolPermiso[]
+}
+
+model Permiso {
+  id      String       @id @default(cuid())
+  codigo  String       @unique // ej: "empleado:read"
+  modulo  String       // ej: "empleado"
+  accion  String       // ej: "read"
+  roles   RolPermiso[]
+}
+
+model UsuarioRol {
+  usuarioId  String
+  rolId      String
+  asignadoAt DateTime   @default(now())
+  usuario    Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  rol        RolSistema @relation(fields: [rolId], references: [id])
+
+  @@id([usuarioId, rolId])
+}
+
+model RolPermiso {
+  rolId     String
+  permisoId String
+  rol       RolSistema @relation(fields: [rolId], references: [id], onDelete: Cascade)
+  permiso   Permiso    @relation(fields: [permisoId], references: [id], onDelete: Cascade)
+
+  @@id([rolId, permisoId])
+}
+
+// ─────────────────────────────────────────────────────────
+// AUDITORÍA
+// ─────────────────────────────────────────────────────────
+
+model LogAuditoria {
+  id        String   @id @default(cuid())
+  usuarioId String?
+  accion    String   // CREATE | UPDATE | DELETE | EXPORT | LOGIN | LOGOUT
+  entidad   String   // "Empleado" | "Nomina" | "Usuario" | ...
+  entidadId String?
+  detalle   String?  // JSON serializado con los cambios
+  ip        String?
+  fecha     DateTime @default(now())
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@index([usuarioId])
+  @@index([entidad, entidadId])
+  @@index([fecha])
+}
