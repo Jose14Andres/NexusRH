@@ -16,6 +16,7 @@ export function requireEnv(key: string): string {
 }
 
 export function signAccessToken(payload: JwtPayload): string {
+  return jwt.sign(payload as any, requireEnv('JWT_SECRET'), {
   return jwt.sign(payload, requireEnv('JWT_SECRET'), {
     expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as any,
   });
