@@ -9,6 +9,8 @@ import DepartamentosPage from './pages/DepartamentosPage';
 import CargosPage from './pages/CargosPage';
 import EmpleadosPage from './pages/EmpleadosPage';
 import EmpleadoDetailPage from './pages/EmpleadoDetailPage';
+import HorasPage from './pages/HorasPage';
+import HorasAprobacionPage from './pages/HorasAprobacionPage';
 
 // Placeholder para módulos futuros
 function Placeholder({ title }: { title: string }) {
@@ -59,7 +61,10 @@ export default function App() {
               path="horas"
               element={<ProtectedRoute permission="horas:read" />}
             >
-              <Route index element={<Placeholder title="Registro de Horas" />} />
+              <Route index element={<HorasPage />} />
+              <Route path="aprobacion" element={<ProtectedRoute permission="horas:approve" />}>
+                <Route index element={<HorasAprobacionPage />} />
+              </Route>
             </Route>
 
             {/* Módulo 5 — Nómina */}

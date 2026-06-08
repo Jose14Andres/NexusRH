@@ -96,18 +96,22 @@ model Afiliacion {
 // ─────────────────────────────────────────────────────────
 
 model RegistroHoras {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   empleadoId    String
   fecha         DateTime
-  horasNormales Float    @default(0)
-  horasExtras   Float    @default(0)
+  horasNormales Float     @default(0)
+  horasExtras   Float     @default(0)
   observacion   String?
-  estado        String   @default("PENDIENTE") // PENDIENTE | APROBADO | RECHAZADO
-  aprobadoPor   String?  // usuarioId
-  createdAt     DateTime @default(now())
-  empleado      Empleado @relation(fields: [empleadoId], references: [id])
+  estado        String    @default("PENDIENTE") // PENDIENTE | APROBADO | RECHAZADO
+  aprobadoPor   String?   // usuarioId del aprobador
+  aprobadoAt    DateTime? // cuándo se aprobó o rechazó
+  motivoRechazo String?   // razón del rechazo visible al empleado
+  createdAt     DateTime  @default(now())
+  empleado      Empleado  @relation(fields: [empleadoId], references: [id])
 
   @@unique([empleadoId, fecha])
+  @@index([empleadoId, estado])
+  @@index([fecha])
 }
 
 // ─────────────────────────────────────────────────────────
