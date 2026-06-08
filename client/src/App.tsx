@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard';
 import OrganizacionPage from './pages/OrganizacionPage';
 import DepartamentosPage from './pages/DepartamentosPage';
 import CargosPage from './pages/CargosPage';
+import EmpleadosPage from './pages/EmpleadosPage';
+import EmpleadoDetailPage from './pages/EmpleadoDetailPage';
 
 // Placeholder para módulos futuros
 function Placeholder({ title }: { title: string }) {
@@ -48,8 +50,8 @@ export default function App() {
               path="empleados"
               element={<ProtectedRoute permission="empleado:read" />}
             >
-              <Route index element={<Placeholder title="Empleados" />} />
-              <Route path=":id" element={<Placeholder title="Ficha de Empleado" />} />
+              <Route index element={<EmpleadosPage />} />
+              <Route path=":id" element={<EmpleadoDetailPage />} />
             </Route>
 
             {/* Módulo 4 — Horas */}

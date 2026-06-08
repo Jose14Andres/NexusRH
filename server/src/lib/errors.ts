@@ -13,6 +13,10 @@ export class ValidationError extends Error {
   constructor(message: string) { super(message); this.name = 'ValidationError'; }
 }
 
+export class ForbiddenError extends Error {
+  constructor(message: string) { super(message); this.name = 'ForbiddenError'; }
+}
+
 // Convierte errores de Prisma a errores de dominio
 export function handleDbError(err: unknown): never {
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -38,6 +42,8 @@ export function sendError(res: Response, err: unknown): void {
     res.status(409).json({ error: err.message });
   } else if (err instanceof ValidationError) {
     res.status(400).json({ error: err.message });
+  } else if (err instanceof ForbiddenError) {
+    res.status(403).json({ error: err.message });
   } else {
     console.error('[server]', err);
     res.status(500).json({ error: 'Error interno del servidor' });
