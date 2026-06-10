@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const today = () => {
   const d = new Date();
-  d.setHours(23, 59, 59, 999);
+  d.setUTCHours(23, 59, 59, 999);
   return d;
 };
 

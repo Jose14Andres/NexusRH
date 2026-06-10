@@ -35,9 +35,11 @@ const PERMISOS = [
   { codigo: 'nomina:approve',       modulo: 'nomina',       accion: 'approve' },
   { codigo: 'nomina:export',        modulo: 'nomina',       accion: 'export'  },
   { codigo: 'nomina:config',        modulo: 'nomina',       accion: 'config'  },
-  // Estadísticas
-  { codigo: 'estadisticas:read',    modulo: 'estadisticas', accion: 'read'    },
-  { codigo: 'estadisticas:export',  modulo: 'estadisticas', accion: 'export'  },
+  // Estadísticas (scoped: self = individual, dept = departamento, org = organización)
+  { codigo: 'estadisticas:read:self', modulo: 'estadisticas', accion: 'read:self' },
+  { codigo: 'estadisticas:read:dept', modulo: 'estadisticas', accion: 'read:dept' },
+  { codigo: 'estadisticas:read:org',  modulo: 'estadisticas', accion: 'read:org'  },
+  { codigo: 'estadisticas:export',    modulo: 'estadisticas', accion: 'export'    },
   // Usuario
   { codigo: 'usuario:read',         modulo: 'usuario',      accion: 'read'    },
   { codigo: 'usuario:manage',       modulo: 'usuario',      accion: 'manage'  },
@@ -59,7 +61,7 @@ const ROL_PERMISOS: Record<string, string[]> = {
     'afiliacion:read', 'afiliacion:write',
     'horas:read', 'horas:write', 'horas:approve', 'horas:export',
     'nomina:read', 'nomina:write', 'nomina:approve', 'nomina:export',
-    'estadisticas:read', 'estadisticas:export',
+    'estadisticas:read:self', 'estadisticas:read:dept', 'estadisticas:read:org', 'estadisticas:export',
   ],
 
   CONTABILIDAD: [
@@ -69,7 +71,7 @@ const ROL_PERMISOS: Record<string, string[]> = {
     'empleado:read',
     'afiliacion:read',
     'nomina:read', 'nomina:write', 'nomina:export',
-    'estadisticas:read', 'estadisticas:export',
+    'estadisticas:read:self', 'estadisticas:read:dept', 'estadisticas:read:org', 'estadisticas:export',
   ],
 
   SUPERVISOR: [
@@ -78,7 +80,7 @@ const ROL_PERMISOS: Record<string, string[]> = {
     'cargo:read',
     'empleado:read',
     'horas:read', 'horas:write', 'horas:approve',
-    'estadisticas:read',
+    'estadisticas:read:self', 'estadisticas:read:dept',
   ],
 
   EMPLEADO: [
@@ -86,7 +88,7 @@ const ROL_PERMISOS: Record<string, string[]> = {
     'afiliacion:read',
     'horas:read', 'horas:write',
     'nomina:read', 'nomina:export',
-    'estadisticas:read',
+    'estadisticas:read:self',
   ],
 };
 

@@ -13,6 +13,7 @@ import HorasPage from './pages/HorasPage';
 import HorasAprobacionPage from './pages/HorasAprobacionPage';
 import NominaPage from './pages/NominaPage';
 import NominaDetailPage from './pages/NominaDetailPage';
+import EstadisticasPage from './pages/EstadisticasPage';
 
 // Placeholder para módulos futuros
 function Placeholder({ title }: { title: string }) {
@@ -81,9 +82,9 @@ export default function App() {
             {/* Módulo 6 — Estadísticas */}
             <Route
               path="estadisticas"
-              element={<ProtectedRoute permission="estadisticas:read" />}
+              element={<ProtectedRoute permission="estadisticas:read:self" />}
             >
-              <Route index element={<Placeholder title="Estadísticas" />} />
+              <Route index element={<EstadisticasPage />} />
             </Route>
 
             {/* Módulo 7 — Exportación */}
