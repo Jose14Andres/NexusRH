@@ -9,7 +9,7 @@ export interface JwtPayload {
   departamentoId?: string | null;
 }
 
-function requireEnv(key: string): string {
+export function requireEnv(key: string): string {
   const val = process.env[key];
   if (!val) throw new Error(`Variable de entorno requerida: ${key}`);
   return val;
