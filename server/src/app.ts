@@ -12,6 +12,7 @@ import departamentoRoutes from './modules/departamento/departamento.routes';
 import cargoRoutes        from './modules/cargo/cargo.routes';
 import empleadoRoutes     from './modules/empleado/empleado.routes';
 import horasRoutes        from './modules/horas/horas.routes';
+import nominaRoutes       from './modules/nomina/nomina.routes';
 
 const app = express();
 
@@ -37,9 +38,9 @@ app.use('/api/departamentos',  departamentoRoutes);
 app.use('/api/cargos',         cargoRoutes);
 app.use('/api/empleados',      empleadoRoutes);
 app.use('/api/horas',          horasRoutes);
+app.use('/api/nomina',         nominaRoutes);
 
 // Módulos pendientes (se descomentarán módulo a módulo):
-// app.use('/api/nomina',       nominaRoutes);
 // app.use('/api/estadisticas', estadisticasRoutes);
 // app.use('/api/exportacion',  exportacionRoutes);
 // app.use('/api/usuarios',     usuariosRoutes);

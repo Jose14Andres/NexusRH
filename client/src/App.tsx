@@ -11,6 +11,8 @@ import EmpleadosPage from './pages/EmpleadosPage';
 import EmpleadoDetailPage from './pages/EmpleadoDetailPage';
 import HorasPage from './pages/HorasPage';
 import HorasAprobacionPage from './pages/HorasAprobacionPage';
+import NominaPage from './pages/NominaPage';
+import NominaDetailPage from './pages/NominaDetailPage';
 
 // Placeholder para módulos futuros
 function Placeholder({ title }: { title: string }) {
@@ -72,8 +74,8 @@ export default function App() {
               path="nomina"
               element={<ProtectedRoute permission="nomina:read" />}
             >
-              <Route index element={<Placeholder title="Nómina" />} />
-              <Route path=":id" element={<Placeholder title="Detalle de Nómina" />} />
+              <Route index element={<NominaPage />} />
+              <Route path=":id" element={<NominaDetailPage />} />
             </Route>
 
             {/* Módulo 6 — Estadísticas */}
