@@ -71,6 +71,15 @@ describe('handleDbError', () => {
     expect(() => handleDbError(prismaError)).toThrow('La relación requerida no existe');
   });
 
+  it('should rethrow PrismaClientKnownRequestError with unhandled code', () => {
+    const prismaError = new Prisma.PrismaClientKnownRequestError('Error', {
+      code: 'P9999',
+      clientVersion: '1.0.0'
+    });
+    expect(() => handleDbError(prismaError)).toThrow(Prisma.PrismaClientKnownRequestError);
+    expect(() => handleDbError(prismaError)).toThrow('Error');
+  });
+
   it('should rethrow unknown errors', () => {
     const unknownError = new Error('Unknown error');
     expect(() => handleDbError(unknownError)).toThrow(Error);
