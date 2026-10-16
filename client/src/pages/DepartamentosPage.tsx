@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FolderOpen, Pencil, Trash2 } from 'lucide-react';
 import { departamentoApi, Departamento, CreateDepartamentoDto } from '../api/departamento';
 import { organizacionApi, Organizacion } from '../api/organizacion';
+import { extractErrorMessage } from '../utils/errors';
 import { useAuth } from '../features/auth/AuthContext';
 import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
@@ -74,9 +75,7 @@ export default function DepartamentosPage() {
       setModalOpen(false);
       load();
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
-        ?? 'Error al guardar';
-      setFormError(msg);
+      setFormError(extractErrorMessage(err, 'Error al guardar'));
     } finally {
       setSaving(false);
     }
@@ -90,9 +89,7 @@ export default function DepartamentosPage() {
       setDeleteTarget(null);
       load();
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
-        ?? 'Error al eliminar';
-      setError(msg);
+      setError(extractErrorMessage(err, 'Error al eliminar'));
       setDeleteTarget(null);
     } finally {
       setDeleting(false);

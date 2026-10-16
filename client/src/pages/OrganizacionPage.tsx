@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Building2, Pencil, Trash2, Globe, Lock } from 'lucide-react';
 import { organizacionApi, Organizacion, CreateOrganizacionDto } from '../api/organizacion';
+import { extractErrorMessage } from '../utils/errors';
 import { useAuth } from '../features/auth/AuthContext';
 import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
@@ -70,9 +71,7 @@ export default function OrganizacionPage() {
       setModalOpen(false);
       load();
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
-        ?? 'Error al guardar';
-      setFormError(msg);
+      setFormError(extractErrorMessage(err, 'Error al guardar'));
     } finally {
       setSaving(false);
     }
@@ -86,9 +85,7 @@ export default function OrganizacionPage() {
       setDeleteTarget(null);
       load();
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
-        ?? 'Error al eliminar';
-      setError(msg);
+      setError(extractErrorMessage(err, 'Error al eliminar'));
       setDeleteTarget(null);
     } finally {
       setDeleting(false);

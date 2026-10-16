@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Briefcase, Pencil, Trash2, DollarSign, Clock } from 'lucide-react';
 import { cargoApi, Cargo, CreateCargoDto } from '../api/cargo';
 import { departamentoApi, Departamento } from '../api/departamento';
+import { extractErrorMessage } from '../utils/errors';
 import { useAuth } from '../features/auth/AuthContext';
 import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
@@ -91,9 +92,7 @@ export default function CargosPage() {
       setModalOpen(false);
       load();
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
-        ?? 'Error al guardar';
-      setFormError(msg);
+      setFormError(extractErrorMessage(err, 'Error al guardar'));
     } finally {
       setSaving(false);
     }
@@ -107,9 +106,7 @@ export default function CargosPage() {
       setDeleteTarget(null);
       load();
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
-        ?? 'Error al eliminar';
-      setError(msg);
+      setError(extractErrorMessage(err, 'Error al eliminar'));
       setDeleteTarget(null);
     } finally {
       setDeleting(false);
