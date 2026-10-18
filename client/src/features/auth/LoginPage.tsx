@@ -2,6 +2,7 @@ import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, LogIn, Building2 } from 'lucide-react';
 import { useAuth } from './AuthContext';
+import { extractErrorMessage } from '../../utils/errors';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -21,12 +22,7 @@ export default function LoginPage() {
       await login(username.trim(), password);
       navigate('/dashboard', { replace: true });
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : (err as { response?: { data?: { error?: string } } })?.response?.data?.error
-          ?? 'Error al iniciar sesión';
-      setError(msg);
+      setError(extractErrorMessage(err, 'Error al iniciar sesión'));
     } finally {
       setIsLoading(false);
     }
