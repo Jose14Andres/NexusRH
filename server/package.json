@@ -21,10 +21,12 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
     "express": "^4.21.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "pdfkit": "^0.19.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -37,6 +39,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.9.0",
+    "@types/pdfkit": "^0.17.6",
     "jest": "^30.4.2",
     "prisma": "^5.22.0",
     "ts-jest": "^29.4.11",

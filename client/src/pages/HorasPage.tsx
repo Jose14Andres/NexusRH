@@ -6,6 +6,7 @@ import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
+import ExportMenu from '../components/ExportMenu';
 
 const ESTADO_BADGE: Record<string, string> = {
   PENDIENTE: 'bg-yellow-50 text-yellow-700',
@@ -28,6 +29,7 @@ const thisMonth = new Date().getMonth() + 1;
 export default function HorasPage() {
   const { user, hasPermission } = useAuth();
   const canWrite  = hasPermission('horas:write');
+  const canExport = hasPermission('horas:export');
   const isPriv    = user?.roles.some(r => ['ADMIN', 'RRHH'].includes(r)) ?? false;
 
   // Filtros
@@ -183,6 +185,18 @@ export default function HorasPage() {
               placeholder="Buscar empleado…"
               value={filterQ}
               onChange={e => setQ(e.target.value)}
+            />
+          </div>
+        )}
+
+        {canExport && (
+          <div className="ml-auto">
+            <ExportMenu
+              entidad="horas"
+              filtros={{
+                desde: `${anio}-${String(mes).padStart(2, '0')}-01`,
+                hasta: `${anio}-${String(mes).padStart(2, '0')}-${String(new Date(anio, mes, 0).getDate()).padStart(2, '0')}`,
+              }}
             />
           </div>
         )}

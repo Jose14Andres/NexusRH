@@ -7,6 +7,7 @@ import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
+import ExportMenu from '../components/ExportMenu';
 
 const MESES = [
   'Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -36,6 +37,7 @@ export default function NominaPage() {
   const navigate = useNavigate();
   const canWrite   = hasPermission('nomina:write');
   const canApprove = hasPermission('nomina:approve');
+  const canExport  = hasPermission('nomina:export');
 
   // Filtros
   const [mes, setMes]     = useState(thisMonth);
@@ -161,6 +163,15 @@ export default function NominaPage() {
           <option value="APROBADO">Aprobado</option>
           <option value="PAGADO">Pagado</option>
         </select>
+
+        {canExport && (
+          <div className="ml-auto">
+            <ExportMenu
+              entidad="nomina"
+              filtros={{ mes, anio, estado: estado || undefined }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Tabla */}
@@ -170,7 +181,7 @@ export default function NominaPage() {
         <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">{error}</div>
       ) : !resp || resp.data.length === 0 ? (
         <EmptyState
-          icon={<DollarSign className="h-8 w-8 text-gray-400" />}
+          icon={DollarSign}
           title="Sin nóminas"
           description={canWrite ? 'Usa "Calcular período" para generar las nóminas del mes.' : 'No hay nóminas registradas para este período.'}
         />
@@ -357,9 +368,9 @@ export default function NominaPage() {
         }
         confirmLabel="Eliminar"
         variant="danger"
-        loading={deleting}
+        isLoading={deleting}
         onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
-        onCancel={() => setDeleteTarget(null)}
+        onClose={() => setDeleteTarget(null)}
       />
     </div>
   );

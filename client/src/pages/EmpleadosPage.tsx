@@ -9,6 +9,7 @@ import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
+import ExportMenu from '../components/ExportMenu';
 
 const ESTADO_BADGE: Record<string, string> = {
   ACTIVO:   'bg-green-50 text-green-700',
@@ -30,6 +31,7 @@ export default function EmpleadosPage() {
   const { hasPermission } = useAuth();
   const canWrite  = hasPermission('empleado:write');
   const canDelete = hasPermission('empleado:delete');
+  const canExport = hasPermission('empleado:export');
 
   const [resp, setResp]         = useState<{ data: Empleado[]; total: number; totalPages: number } | null>(null);
   const [depts, setDepts]       = useState<Departamento[]>([]);
@@ -216,6 +218,18 @@ export default function EmpleadosPage() {
           <option value="INACTIVO">Inactivo</option>
           <option value="LICENCIA">Licencia</option>
         </select>
+
+        {canExport && (
+          <div className="ml-auto">
+            <ExportMenu
+              entidad="empleados"
+              filtros={{
+                departamentoId: filterDept || undefined,
+                estado: filterEstado || undefined,
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {resp?.data.length === 0 ? (

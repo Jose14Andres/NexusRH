@@ -97,12 +97,13 @@ export default function DashboardLayout() {
                   }`
                 }
               >
-                <item.icon className="h-4 w-4 shrink-0" />
-                <span>{item.label}</span>
-                {({ isActive }: { isActive: boolean }) => isActive
-                  ? <ChevronRight className="ml-auto h-3 w-3" />
-                  : null
-                }
+                {({ isActive }) => (
+                  <>
+                    <item.icon className="h-4 w-4 shrink-0" />
+                    <span>{item.label}</span>
+                    {isActive && <ChevronRight className="ml-auto h-3 w-3" />}
+                  </>
+                )}
               </NavLink>
             </li>
           ))}
